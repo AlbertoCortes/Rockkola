@@ -1,0 +1,61 @@
+﻿@using Rockkola.Models
+@{
+    List<Videos> Playlist = new List<Videos>();
+}
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<link href="~/Content/Rockola.css" rel="stylesheet" type="text/css" />
+
+
+
+
+
+@*<div id="ListaVideosDIV"></div>
+    <div id="Playlist"></div>
+
+
+
+    <div id="Reproductor"></div>*@
+
+
+<div id="grid-container">
+    <div id="Buscars">
+        <input type="text" id="Buscar" placeholder="Buscar" class="form-control" />
+        <a class="btn btn-default" href="javascript:void{0}" onclick="func_buscar()">Buscar</a>
+
+
+    </div>
+    <div id="ListaVideosDIV">Resultado de la busqueda.</div>
+    <div id="Reproductor"></div>
+    <div id="Playlist">Mi playlist</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    function func_buscar() {
+        $.ajax({
+            url: '@Url.Action("BuscarVideos","Rockkola")?videoWord='+ $('#Buscar').val(),
+            type: 'GET',
+            success: function (result) {
+                $('#ListaVideosDIV').html(result);
+
+            }
+
+        });
+    }
+
+
+</script>

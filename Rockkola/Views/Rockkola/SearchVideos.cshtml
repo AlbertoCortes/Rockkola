@@ -1,0 +1,47 @@
+﻿@using Rockkola.Models
+@model List<Rockkola.Models.Videos>
+<link href="~/Content/Rockola.css" rel="stylesheet" type="text/css" />
+
+<ul class="SEARCH_VIDEOS">
+
+    @foreach (var item in Model)
+    {
+        <li>
+            <span>
+                <img src='@item.Thumbnail' width="100" height="100" /><p>@item.Nombre</p>
+
+                <a class="btn btn-default" href="javascript:void{0}" onclick="func_addToPlaylist(' @item.Id ','@item.Nombre','@item.Thumbnail','@item.Url')">Agregar a Lista de Reproduccion</a>
+                
+            </span>
+        </li>
+    }
+
+</ul>
+
+
+
+
+<script>
+
+    function func_addToPlaylist(vid,vnombre,vthu,vurl) {
+
+        $.ajax({
+            url: '@Url.Action("AddVideoPlaylist", "Rockkola")',
+            data: {
+                id: vid,
+                name: vnombre,
+                thu: vthu,
+                 url : vurl
+
+
+            },
+            type: 'GET',
+            success: function (result) {
+                $('#Playlist').html(result);
+            }
+
+        });
+     }
+
+
+</script>

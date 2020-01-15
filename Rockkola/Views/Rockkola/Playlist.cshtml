@@ -1,0 +1,37 @@
+﻿@model List<Rockkola.Models.Videos>
+
+<ul class="list-group" >
+    @foreach (var item in Model)
+    {
+        if (item != null)
+        {
+            <li class="list-group-item">@item.Nombre
+            
+                <a class="btn btn-default" href="javascript:void{0}" onclick="func_reproducir('@item.Url')">Reproducir</a>
+            </li>
+
+        }
+    }
+</ul>
+
+
+
+<script>
+
+    function func_reproducir(vid) {
+        $.ajax({
+            url: '@Url.Action("PlayVideo", "Rockkola")',
+            data: {
+                url: vid,
+              
+            },
+            type: 'GET',
+            success: function (result) {
+                $('#Reproductor').html(result);
+            }
+
+        });
+     }
+
+
+</script>
