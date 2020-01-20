@@ -87,3 +87,4 @@ C:\Users\Curso\Documents\Academia\Rockkola\Rockkola\bin\Microsoft.CodeDom.Provid
 C:\Users\Curso\Documents\Academia\Rockkola\Rockkola\obj\Debug\Rockkola.csproj.CopyComplete
 C:\Users\Curso\Documents\Academia\Rockkola\Rockkola\obj\Debug\Rockkola.dll
 C:\Users\Curso\Documents\Academia\Rockkola\Rockkola\obj\Debug\Rockkola.pdb
+C:\Users\Curso\Documents\Academia\Rockkola\Rockkola\obj\Debug\Rockkola.csprojAssemblyReference.cache

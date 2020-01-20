@@ -1,13 +1,13 @@
-﻿@model List<Rockkola.Models.Videos>
+﻿@model List<Rockkola.Models.PlaylistR>
 
 <ul class="list-group" >
     @foreach (var item in Model)
     {
         if (item != null)
         {
-            <li class="list-group-item">@item.Nombre
+            <li class="list-group-item">@item.video.Nombre
             
-                <a class="btn btn-default" href="javascript:void(0)" onclick="func_reproducir('@item.Id')">Reproducir</a>
+                <a class="btn btn-default" href="javascript:void(0)" onclick="func_reproducir('@item.IdVideoCount')">Reproducir</a>
             </li>
 
         }
@@ -19,11 +19,11 @@
 <script>
     
 
-    function func_reproducir(vid) {
+    function func_reproducir(count) {
         $.ajax({
             url: '@Url.Action("PlayVideo", "Rockkola")',
             data: {
-                id: vid,
+                cont: count
               
             },
             type: 'GET',

@@ -1,79 +1,44 @@
 ﻿using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
-using System.Web.Mvc;
 using Rockkola.Models;
 using System.Collections.Generic;
-using Google.Apis.Auth.OAuth2;
-using System.IO;
-using System.Threading;
-using Google.Apis.Util.Store;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace Rockkola.Controllers
 {
     public class RockkolaController : Controller
     {
-        // GET: Rockkola
         public ActionResult Index()
         {
             return View();
         }
-        public void Declare()
-        {
-            List<Videos> PLAYLISTVIDEOS = new List<Videos>();
-            if(Session["Playlist"] == null)
-            {
-                Session["Playlist"] = PLAYLISTVIDEOS;
 
+        public void DeclareP()
+        {
+            List<PlaylistR> playlistVideos = new List<PlaylistR>();
+            if (Session["PlayListRL"] == null)
+            {
+                Session["PlayListRL"] = playlistVideos;
             }
         }
-
-        //public  async ActionResult CreatePlaylist(string id)
-        //{
-        //    UserCredential credential;
-        //    using (var stream = new FileStream("client_secrets.json", FileMode.Open, FileAccess.Read))
-        //    {
-        //        credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-        //            GoogleClientSecrets.Load(stream).Secrets,
-        //            // This OAuth 2.0 access scope allows for full read/write access to the
-        //            // authenticated user's account.
-        //            new[] { YouTubeService.Scope.Youtube },
-        //            "user",
-        //            CancellationToken.None,
-        //            new FileDataStore(this.GetType().ToString())
-        //        );
-        //    }
-
-        //    var youtubeService = new YouTubeService(new BaseClientService.Initializer()
-        //    {
-        //        HttpClientInitializer = credential,
-        //        ApplicationName = this.GetType().ToString()
-        //    });
-
-        //    var newPlaylist = new Playlist();
-        //    newPlaylist.Snippet = new PlaylistSnippet();
-        //    newPlaylist.Snippet.Title = "MiPlaylist";
-        //    newPlaylist.Snippet.Description = "A playlist created with the YouTube API v3";
-        //    newPlaylist.Status = new PlaylistStatus();
-        //    newPlaylist.Status.PrivacyStatus = "public";
-        //    newPlaylist =  youtubeService.Playlists.Insert(newPlaylist, "snippet,status").Execute();
-
-        //    var newPlaylistItem = new PlaylistItem();
-        //    newPlaylistItem.Snippet = new PlaylistItemSnippet();
-        //    newPlaylistItem.Snippet.PlaylistId = newPlaylist.Id;
-        //    newPlaylistItem.Snippet.ResourceId = new ResourceId();
-        //    newPlaylistItem.Snippet.ResourceId.Kind = "youtube#video";
-        //    newPlaylistItem.Snippet.ResourceId.VideoId = id;
-        //    newPlaylistItem = await youtubeService.PlaylistItems.Insert(newPlaylistItem, "snippet").ExecuteAsync();
-        //    return PartialView("Playlist", newPlaylist);
-
-        //}
-
 
         [HttpGet]
         public ActionResult AddVideoPlaylist(string id, string name, string thu, string url)
         {
-            Declare();
+            DeclareP();
+            int count = 0;
+            List<PlaylistR> p = (List<PlaylistR>)Session["PlaylistRL"];
+            if (p.Count == 0)
+            {
+                count = 1;
+            }
+            else
+            {
+                count = p.Last().IdVideoCount + 1;
+            }
+
             Videos video = new Videos
             {
                 Id = id,
@@ -81,18 +46,33 @@ namespace Rockkola.Controllers
                 Thumbnail = thu,
                 Url = url
             };
-            List<Videos> auxList = (List<Videos>)Session["Playlist"];
-            auxList.Add(video);
-            Session["Playlist"] = auxList;
-            return PartialView("Playlist",auxList);
+            PlaylistR play = new PlaylistR
+            {
+                IdVideoCount = count,
+                video = video
+            };
+            p.Add(play);
+            Session["PlayListRL"] = p;
+
+            return PartialView("Playlist", p);
         }
 
 
         [HttpGet]
-        public ActionResult PlayVideo(string id)
+        public ActionResult PlayVideo(int cont)
         {
-            Videos vidtoPlay = new Videos {Id = id };
-            return PartialView("Reproductor", vidtoPlay);
+            Videos vidtoPlay = new Videos();
+            List<PlaylistR> a = (List<PlaylistR>)Session["PlayListRL"];
+            foreach (var i in a)
+            {
+                if (i.IdVideoCount == cont)
+                {
+                    vidtoPlay = i.video;
+                }
+            }
+            PlaylistR p = new PlaylistR { IdVideoCount = cont, video = vidtoPlay };
+
+            return PartialView("Reproductor", p);
         }
 
 
@@ -112,19 +92,18 @@ namespace Rockkola.Controllers
             SearchListResponse searchListResponse = searchListRequest.Execute();
             foreach (var item in searchListResponse.Items)
             {
-                if(item.Id.Kind == "youtube#video")
+                if (item.Id.Kind == "youtube#video")
                 {
-                    videos.Add(new Videos {
+                    videos.Add(new Videos
+                    {
                         Id = item.Id.VideoId,
                         Nombre = item.Snippet.Title,
                         Url = "https://www.youtube.com/embed/" + item.Id.VideoId,
                         Thumbnail = "http://img.youtube.com/vi/" + item.Id.VideoId + "/hqdefault.jpg"
-
-
                     });
                 }
             }
-            return PartialView("searchVideos",videos);
+            return PartialView("searchVideos", videos);
         }
     }
 }
