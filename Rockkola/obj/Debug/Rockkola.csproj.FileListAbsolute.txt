@@ -1,4 +1,3 @@
-C:\Users\Curso\Documents\Academia\Rockkola\Rockkola\obj\Debug\Rockkola.csprojAssemblyReference.cache
 C:\Users\Curso\Documents\Academia\Rockkola\Rockkola\obj\Debug\Rockkola.csproj.CoreCompileInputs.cache
 C:\Users\Curso\Documents\Academia\Rockkola\Rockkola\bin\Rockkola.dll.config
 C:\Users\Curso\Documents\Academia\Rockkola\Rockkola\bin\Rockkola.dll

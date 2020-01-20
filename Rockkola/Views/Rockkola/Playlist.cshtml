@@ -7,7 +7,7 @@
         {
             <li class="list-group-item">@item.Nombre
             
-                <a class="btn btn-default" href="javascript:void{0}" onclick="func_reproducir('@item.Url')">Reproducir</a>
+                <a class="btn btn-default" href="javascript:void(0)" onclick="func_reproducir('@item.Id')">Reproducir</a>
             </li>
 
         }
@@ -17,12 +17,13 @@
 
 
 <script>
+    
 
     function func_reproducir(vid) {
         $.ajax({
             url: '@Url.Action("PlayVideo", "Rockkola")',
             data: {
-                url: vid,
+                id: vid,
               
             },
             type: 'GET',
