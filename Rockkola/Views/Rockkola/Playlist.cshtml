@@ -17,7 +17,9 @@
 
 
 <script>
-    
+    if (@Model.Count == 1) {
+        func_reproducir(1);
+    }
 
     function func_reproducir(count) {
         $.ajax({
