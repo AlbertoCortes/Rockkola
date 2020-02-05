@@ -81,28 +81,20 @@ namespace Rockkola.Controllers
         public ActionResult BuscarVideos(string videoWord)
         {
             List<Videos> videos = new List<Videos>();
-            YouTubeService youtube = new YouTubeService(new BaseClientService.Initializer
+
+            ServicioVideos.GetVideosClient videosService = new ServicioVideos.GetVideosClient();
+            foreach (var item in videosService.ObtenerVideos(videoWord))
+
             {
-                ApiKey = "AIzaSyBhqe3OaIZT7RusiHlV_kBL3z2CExG3Vb4",
-                ApplicationName = "Rockola-264715"
-            });
-            SearchResource.ListRequest searchListRequest = youtube.Search.List("snippet");
-            searchListRequest.Q = videoWord;
-            searchListRequest.MaxResults = 40;
-            SearchListResponse searchListResponse = searchListRequest.Execute();
-            foreach (var item in searchListResponse.Items)
-            {
-                if (item.Id.Kind == "youtube#video")
-                {
-                    videos.Add(new Videos
-                    {
-                        Id = item.Id.VideoId,
-                        Nombre = item.Snippet.Title,
-                        Url = "https://www.youtube.com/embed/" + item.Id.VideoId,
-                        Thumbnail = "http://img.youtube.com/vi/" + item.Id.VideoId + "/hqdefault.jpg"
-                    });
-                }
+                videos.Add(new Videos {
+                    Id = item.ID,
+                    Nombre = item.Nombre,
+                    Url = item.Url,
+                    Thumbnail = item.Thumbnail
+                });
             }
+          
+
             return PartialView("searchVideos", videos);
         }
     }
