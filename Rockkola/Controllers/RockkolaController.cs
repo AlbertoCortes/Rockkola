@@ -1,10 +1,16 @@
-﻿using Google.Apis.Services;
-using Google.Apis.YouTube.v3;
-using Google.Apis.YouTube.v3.Data;
+﻿using Newtonsoft.Json;
 using Rockkola.Models;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace Rockkola.Controllers
 {
@@ -59,6 +65,37 @@ namespace Rockkola.Controllers
 
 
         [HttpGet]
+        public async Task<ActionResult>  AddHistory(string nombre, string id)
+        {
+            List<VideoHist> ListHistory = new List<VideoHist>();
+            string urlGEThistory = "http://localhost:8080/Api/ApiHistory";
+            var request = (HttpWebRequest)WebRequest.Create(urlGEThistory);
+            var content = string.Empty;
+            string JsonPOST = "{'videoName':'" + nombre + "','videoID':'" + id + "'}";
+            //POST json to insert on history table DB    
+            using (var client = new HttpClient())
+            {
+                var response = await client.PostAsync(
+                    urlGEThistory,
+                     new StringContent(JsonPOST, Encoding.UTF8, "application/json"));
+            }
+            //GET History from DB
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                using (var stream = response.GetResponseStream())
+                {
+                    using (var sr = new StreamReader(stream))
+                    {
+                        content = sr.ReadToEnd();
+                    }
+                }
+            }
+            JavaScriptSerializer ser = new JavaScriptSerializer();
+            ListHistory = ser.Deserialize<List<VideoHist>>(content);
+            return PartialView("AddHistory", ListHistory);
+        }
+
+        [HttpGet]
         public ActionResult PlayVideo(int cont)
         {
             Videos vidtoPlay = new Videos();
@@ -76,26 +113,28 @@ namespace Rockkola.Controllers
         }
 
 
-
         [HttpGet]
         public ActionResult BuscarVideos(string videoWord)
         {
             List<Videos> videos = new List<Videos>();
-
-            ServicioVideos.GetVideosClient videosService = new ServicioVideos.GetVideosClient();
-            foreach (var item in videosService.ObtenerVideos(videoWord))
-
-            {
-                videos.Add(new Videos {
-                    Id = item.ID,
-                    Nombre = item.Nombre,
-                    Url = item.Url,
-                    Thumbnail = item.Thumbnail
-                });
-            }
-          
-
+                string url = "http://localhost/Api/API?name=" + videoWord;
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                var content = string.Empty;
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    using (var stream = response.GetResponseStream())
+                    {
+                        using (var sr = new StreamReader(stream))
+                        {
+                            content = sr.ReadToEnd();
+                        }
+                    }
+                }
+                JavaScriptSerializer ser = new JavaScriptSerializer();
+                videos = ser.Deserialize<List<Videos>>(content);
             return PartialView("searchVideos", videos);
         }
+
+ 
     }
 }

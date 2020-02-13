@@ -1,0 +1,43 @@
+﻿
+#grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 0.2fr 1.7fr 1.1fr;
+    grid-template-areas: "Buscar Buscar Buscar Search" "Reproductor Reproductor Reproductor Search" "Playlist Playlist Playlist Search";
+}
+
+#Buscars {
+    grid-area: Buscar;
+}
+
+#ListaVideosDIV {
+    grid-area: Search;
+    width:500px;
+}
+
+#Reproductor {
+    grid-area: Reproductor;
+    padding:30px 10px 30 px 10px;
+    height:430px;
+}
+
+#Playlist {
+    grid-area: Playlist;
+    height:200px;
+    overflow-y:scroll;
+}
+
+#SEARCH_VIDEOS li {
+    list-style: none;
+}
+
+
+.SEARCH_VIDEOS {
+    height: 550px;
+    overflow-y: scroll;
+}
+
+.SEARCH_VIDEOS li {
+    list-style:none;
+    padding: 5px 2px 5px 2px;
+    }

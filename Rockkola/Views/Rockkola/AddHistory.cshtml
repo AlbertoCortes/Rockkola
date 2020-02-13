@@ -1,0 +1,17 @@
+﻿@model List<Rockkola.Models.VideoHist>
+
+<ul class="list-group">
+    @foreach (var item in Model)
+    {
+        if (item != null)
+        {
+            <li class="list-group-item">
+                @item.videoName
+
+        </li>
+
+    }
+}
+</ul>
+
+
